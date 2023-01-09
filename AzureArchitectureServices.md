@@ -28,3 +28,43 @@ Resource groups
 -   - each management group and sub can support only one parent.
 
 # Describe Azure Compute and Networking Services
+VMs are IaaS, as you run whatever OS, software, and hosting configs you want.
+
+### Creating a Linux VM and Installing Nginx
+az vm create \
+  --resource-group learn-d3882c15-fd39-45f5-afce-97fce2e77dee \
+  --name my-vm \
+  --image UbuntuLTS \
+  --admin-username azureuser \
+  --generate-ssh-keys
+
+az vm extension set \
+  --resource-group learn-d3882c15-fd39-45f5-afce-97fce2e77dee \
+  --vm-name my-vm \
+  --name customScript \
+  --publisher Microsoft.Azure.Extensions \
+  --version 2.1 \
+  --settings '{"fileUris":["https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh"]}' \
+  --protected-settings '{"commandToExecute": "./configure-nginx.sh"}'
+
+Command in depth: https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh
+
+### Azure Containers
+VMs are limited to a single OS per VM. If you want to run multiple instances of an app on a single host, containers are better.
+
+### Serverless Computing (Azure Functions)
+Responsibility of managing servers is handled for you. Only focus on development. 
+
+3 main benefits:
+1. No infrastructure managemnet like OS
+2. Scalability
+3. Only pay for what you use
+
+### Application Hosting Options
+VMs give max control and configuration settings.
+
+Containers are able to isolate and individually manage different aspects of the hosting solution.
+
+**Azure App Service** enales you to build and host web apps, background jobs, mobile back-ends, and APIs without managing infrastructure. 
+
+## Azure Virtual Networking
