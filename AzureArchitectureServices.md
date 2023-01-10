@@ -2,11 +2,17 @@
 Many teams start exploring the cloud by moving existing applications to VMs in Azure.
 
 Commands for Azure Cloud Shell (PowerShell)
+
 ```get-date```
+
 ```bash``` - enters bash mode instead of powershell
+
 ```az version```
+
 ```az upgrade```
+
 ```az interactive``` - makes terminal resemble IDE
+
 ```exit```
 
 ### Physical Infrastructure
@@ -27,17 +33,19 @@ Resource groups
 -   - 10,000 management groups can be supported in a single directory, with these groups supporting up to 6 levels of depth, does not include root level or subscriptions level
 -   - each management group and sub can support only one parent.
 
-# Describe Azure Compute and Networking Services
+### Describe Azure Compute and Networking Services
 VMs are IaaS, as you run whatever OS, software, and hosting configs you want.
 
 ### Creating a Linux VM and Installing Nginx
+```
 az vm create \
   --resource-group learn-d3882c15-fd39-45f5-afce-97fce2e77dee \
   --name my-vm \
   --image UbuntuLTS \
   --admin-username azureuser \
   --generate-ssh-keys
-
+```
+```
 az vm extension set \
   --resource-group learn-d3882c15-fd39-45f5-afce-97fce2e77dee \
   --vm-name my-vm \
@@ -46,6 +54,7 @@ az vm extension set \
   --version 2.1 \
   --settings '{"fileUris":["https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh"]}' \
   --protected-settings '{"commandToExecute": "./configure-nginx.sh"}'
+```
 
 Command in depth: https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh
 
@@ -68,3 +77,70 @@ Containers are able to isolate and individually manage different aspects of the 
 **Azure App Service** enales you to build and host web apps, background jobs, mobile back-ends, and APIs without managing infrastructure. 
 
 ## Azure Virtual Networking
+Azure virtual networking supports both public and private endpoints for comms between external/internal resources.
+
+Get VM's IP address and stores in Bash variable:
+```
+IPADDRESS="$(az vm list-ip-addresses \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --name my-vm \
+  --query "[].virtualMachine.network.publicIpAddresses[*].ipAddress" \
+  --output tsv)"
+```
+
+Downloads home page (this most likely doesn't work initially, we will set up later):
+```
+curl --connect-timeout 5 http://$IPADDRESS
+```
+
+List network security groups associated with VM:
+```
+az network nsg list \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --query '[].name' \
+  --output tsv
+```
+
+List rules associated with the NSG named my-vmNSG
+```
+az network nsg rule list \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --nsg-name my-vmNSG
+```
+
+Running this command right after then tidies up the columns:
+```
+az network nsg rule list \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --nsg-name my-vmNSG \
+  --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' \
+  --output table
+```
+
+Create a rule called allow-http that allows inbound traffic from port 80:
+```
+az network nsg rule create \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --nsg-name my-vmNSG \
+  --name allow-http \
+  --protocol tcp \
+  --priority 100 \
+  --destination-port-range 80 \
+  --access Allow
+```
+
+View updated list of rules:
+```
+az network nsg rule list \
+  --resource-group learn-e5b93eb5-2e1b-4e05-9eff-69d4db5cb605 \
+  --nsg-name my-vmNSG \
+  --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' \
+  --output table
+```
+
+From there, should be able to see your VM with:
+```
+curl --connect-timeout 5 http://$IPADDRESS
+```
+
+### Describe Azure Virtual Private Networks
