@@ -178,3 +178,6 @@ You can also copy data to secondary region. Azure offers **Geo-redundant storage
 - Disks: block-level storage for VMs
 
 # Azure Identity, Access, and Security
+Azure Active Directory (AD) provides services like: authentication, SSO, app management, and device management.
+
+Azure AD Domain Services (AD DS) provides managed domain dervices such as domain join, group policy, LDAP, and Kerberos/NTLM auth. 
