@@ -76,7 +76,7 @@ Containers are able to isolate and individually manage different aspects of the 
 
 **Azure App Service** enales you to build and host web apps, background jobs, mobile back-ends, and APIs without managing infrastructure. 
 
-## Azure Virtual Networking
+# Azure Virtual Networking
 Azure virtual networking supports both public and private endpoints for comms between external/internal resources.
 
 Get VM's IP address and stores in Bash variable:
@@ -158,3 +158,23 @@ Features include:
 - dynamic routing between network and Microsoft via Border Gateway Protocol (BGP)
 - built in redundancy in every peering location
 
+# Describe Azure Storage Devices
+### Azure Storage Redundancy
+Data in Azure storage account is always replicated 3 times in the primary region. 
+
+Two options for how data is replicated in primary region:
+1. **Locally redundant storage (LRS)** replicates data 3 times in single data center in primary region. Lowest cost and least durable compared to other options, as data is in 1 center.
+2. **Zone redundant storage (ZRS)** replicates data 3 times across 3 Azure availability zones in primary region. Recommended for HA and also restricting replication of data within country/region for gov. reasons.
+
+You can also copy data to secondary region. Azure offers **Geo-redundant storage (GRS)** and **Geo-zone-redundant storage(GZRS)**. GRS is running LRS in 2 regions, GZRS is running ZRS in main region and LRS in a second region.
+
+### Azure Storage Services
+- Blobs: massively scalable object store for text and binary data
+- - ideal for images/docs to browser, storing files for distributed access, streaming audio/vid, backups and archives, data for analytics
+- - Hot, cool, and archive level access
+- Files: managed file shares
+- - SMB or NFS protocols for file access.
+- Queues: messaging store for reliable messaging between applications
+- Disks: block-level storage for VMs
+
+# Azure Identity, Access, and Security
