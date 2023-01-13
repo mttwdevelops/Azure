@@ -144,3 +144,17 @@ curl --connect-timeout 5 http://$IPADDRESS
 ```
 
 ### Describe Azure Virtual Private Networks
+Only 1 VPN gatewway can be deployed per virtual network, but a single gateweay can connect to multiple locations, such as other virtual networks or other on-premises datacenters.
+
+2 different VPN types: policy-based or route-based. Both VPN gateways use a pre-shared key as the only method of authentication.
+- **Policy-based** VPN gateways specify statically the IP address of packets that should be encrypted through each tunnel. 
+- **Route-based** gateways have IPSec tunnels that are modeled as network interface or virtual tunnel interfaces. IP routing (static or dynamic routing protocols) decides which tunnel interfaces to use when sending packets. Preferred for on-premises devices, as they are more resilient to topology changes/creation of new subnets. 
+
+### Describe Azure ExpressRoute
+Extends on-premises networks into cloud over private connection.
+
+Features include:
+- global connectivity to MS services
+- dynamic routing between network and Microsoft via Border Gateway Protocol (BGP)
+- built in redundancy in every peering location
+
